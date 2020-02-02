@@ -118,38 +118,94 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
-var html = document.querySelector("#html");
-var style = document.querySelector("#style");
-var string = "/* \u4F60\u597D\uFF0C\u6211\u53EB\u5C0F\u65B9\n * \u63A5\u4E0B\u6765\u6211\u6F14\u793A\u4E00\u4E0B\u6211\u7684\u524D\u7AEF\u529F\u5E95\n * \u9996\u5148\u6211\u8981\u51C6\u5907\u4E00\u4E2Adiv\n **/\n#div1{\n    border: 1px solid red;\n    width: 200px;\n    height: 200px;\n}\n/* \u63A5\u4E0B\u6765\u6211\u628A div \u53D8\u6210\u4E00\u4E2A\u516B\u5366\u56FE\n * \u6CE8\u610F\u770B\u597D\u4E86\n * \u9996\u5148\uFF0C\u628A div \u53D8\u6210\u4E00\u4E2A\u5706\n **/\n#div1{\n    border-radius: 50%;\n    box-shadow: 0 0 3px rgba(0,0,0,0.5);\n    border: none;\n}\n/* \u516B\u5366\u662F\u9634\u9633\u5F62\u6210\u7684\n * \u4E00\u9ED1\u4E00\u767D\n **/\n#div1{\n    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%);\n}\n/* \u52A0\u4E24\u4E2A\u795E\u79D8\u7684\u5C0F\u7403 */\n#div1::before{\n    width: 100px;\n    height: 100px;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    background: #000;\n    border-radius: 50%;\n    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 25%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%);\n}\n#div1::after{\n    width: 100px;\n    height: 100px;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    background: #fff;\n    border-radius: 50%;\n    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(255,255,255,1) 25%, rgba(255,255,255,1) 100%, rgba(0,0,0,1) 100%);\n}\n";
-var string2 = "";
-var n = 0;
+var demo = document.querySelector("#html"); // let n = 1
+
+var n = 0; //n从0开始，what different?咿刚好字符串下标就是从0开始的
+
+var str = "/* \u4F60\u597D\uFF0C\u6211\u53EB\u968B\u946B\n*\u63A5\u4E0B\u6765\u6211\u8981\u5C55\u793A\u4E00\u4E0B\u6211\u7684\u524D\u7AEF\u529F\u5E95\n*\u9996\u5148\u51C6\u5907\u4E00\u4E2Adiv\n*/\n#div1{\n   width: 200px;\n   height: 200px;\n   \n}\n/*\u63A5\u4E0B\u6765\u6211\u628A\u4E00\u4E2Adiv\u53D8\u6210\u516B\u5366\n*\u6CE8\u610F\u770B\u597D\u4E86\n*\u9996\u5148\u628Adiv\u53D8\u6210\u4E00\u4E2A\u5706\n*/\n#div1{\n    border-radius: 50%;\n    border:none;\n    -moz-box-shadow:5px 8px 17px #333333;\n     -webkit-box-shadow:5px 8px 17px #333333;\n      box-shadow:5px 8px 17px #333333;\n}\n/*\u63A5\u4E0B\u6765\u6211\u628A\u5B83\u53D8\u6210\u9ED1\u767D\n*/\n#div1{\n    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);\n}\n/* \u7136\u540E\u6211\u518D\u52A0\u4E24\u4E2A\u5708\n*/\n#div1::before{\n    width: 100px;\n    height: 100px;\n    \n   top:0;\n    left:50%;\n    background:#000;\n    transform: translateX(-50%);\n    border-radius: 50%;\n    border:none;\n    background:#000;\n    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 23%, rgba(0,0,0,1) 23%, rgba(14,8,8,1) 100%);\n}\n#div1::after{\n    width: 100px;\n    height: 100px;\n    \n    bottom:0;\n    left:50%;\n    background:#fff;\n    transform: translateX(-50%);  \n    border-radius: 50%;\n    border: none;\n    background: radial-gradient(circle, rgba(14,8,8,1) 0%, rgba(0,0,0,1) 22%, rgba(255,255,255,1) 22%, rgba(255,255,255,1) 100%); \n}\n\n"; //申明一个字符串 我用了比较好用反引号``  而且字符串中有缩进，有空格
+
+var str2 = ""; //如何字符串的回车在html也变成回车（默认的直接压缩为一个空格）？
+//1. str = str.replace('\n', '<br>') // 只能替换一个，第一个换行\n
+//2 .正则表达式表示所有回车，但是会出现<然后消失  以为下一步’<b‘--“<br”--"<br>"时html解析出了这是一个标签 然后就把标签转义就看到<了 就变成了此处的换行
+// str = str.replace(/\n/g, '<br>') //所以正则表达式也不行
+// demo.innerHTML = n
+// demo.innerHTML = str[n]
+// demo.innerHTML = str.substring((0, n))
+
+var css = document.querySelector("#css"); //setTimeout()只执行一次就结束了
+// setTimeout(() => {
+//     n = n + 1
+//     demo.innerHTML = n
+// }, 1000)
+//用setInterval()
+// setInterval(() => {
+//     n = n + 1
+//     demo.innerHTML = n
+// }, 1000)
+// setInterval(() => { demo.innerHTML = n + 1 }, 1000)
+//这样就不行？？？？？？
+//老手不用setInterval()用递归的setTimeout()
+// setTimeout(() => {
+//     n = n + 1
+//     demo.innerHTML = n
+//     setTimeout(() => {
+//         n = n + 1
+//         demo.innerHTML = n
+//         setTimeout(() => {
+//             n = n + 1
+//             demo.innerHTML = n
+//         }, 1000)
+//     }, 1000)
+// }, 1000)
+//函数封装
+// let step = () => {
+//     setTimeout(() => {
+//         n = n + 1
+//         demo.innerHTML = n
+//         step()
+//     }, 500)
+// }
+// //大师调用法调用函数
+// step.call(undefined)
+//添加条件
 
 var step = function step() {
-  setTimeout(function () {
-    // 如果是回车，就不照搬
-    // 如果不是回车就照搬
-    if (string[n] === "\n") {
-      string2 += "<br>";
-    } else if (string[n] === " ") {
-      string2 += "&nbsp;";
-    } else {
-      string2 += string[n];
-    }
+  if (n < str.length) {
+    setTimeout(function () {
+      // str[n] === '\n' ? str2 + '<br>' : str2 + str[n]
+      // str2 += str[n]; //这两行错误
+      if (str[n] === "\n") {
+        str2 += "<br>";
+      } else if (str[n] === " ") {
+        str2 += "&nbsp";
+      } else {
+        str2 += str[n];
+      } // str2 += (str[n] === '\n' ? '<br>' : str[n])
+      // demo.innerHTML = n
+      // demo.innerHTML = str[n]
+      // str2 += str[n]
 
-    html.innerHTML = string2;
-    style.innerHTML = string.substring(0, n);
-    window.scrollTo(0, 99999);
-    html.scrollTo(0, 99999);
 
-    if (n < string.length - 1) {
-      // 如果 n 不是最后一个,就继续
-      n += 1;
+      demo.innerHTML = str2; // demo.innerHTML = str.substring(0, n)
+      // css.innerHTML = `body{color:#ff0000;}`
+
+      css.innerHTML = str.substring(0, n); // css.innerHTML = str2 //这样写会在style出现html标签包含空格回车那种
+
+      n = n + 1;
+      window.scrollTo(0, 999999); //上下滚动， 那左右折行呢？
+
+      html.scrollTo(0, 999999); //屏幕的没有滚动条的时候怎么让内容滚动
+      // word -break: break-all 在哪添加这个属性
+      // css.innerHTML = str.substring(0, n)
+      // console.log(n)  console.log()调试大法
+
       step();
-    }
-  }, 50);
-};
+    }, 10);
+  } else {}
+}; //大师调用法调用函数
 
-step(); // 1=>2
+
+step.apply(null);
 },{}],"../../../../.config/yarn/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -178,7 +234,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56376" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59368" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
